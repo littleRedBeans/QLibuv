@@ -1,22 +1,24 @@
-#ifndef TIMESERVER_H
-#define TIMESERVER_H
+#ifndef ECHOCLIENT_H
+#define ECHOCLIENT_H
 
 #include <QObject>
 #include <memory>
-// RFC 868
+// RFC 862
 namespace shuimo {
 namespace net {
 class UvUdpSocket;
 } // namespace net
 } // namespace shuimo
 
-class TimeServer : public QObject
+class EchoClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit TimeServer(const QString &addr, quint16 port, QObject *parent = nullptr);
-    ~TimeServer();
+    explicit EchoClient(const QString &addr, quint16 port, QObject *parent = nullptr);
+    ~EchoClient();
     void startRecv();
+public slots:
+    void sendData();
 signals:
 private slots:
     void onRecvData(const QString addr, quint16 port, QByteArray data);
@@ -26,4 +28,4 @@ private:
     quint16 port_;
     std::unique_ptr<shuimo::net::UvUdpSocket> socket_;
 };
-#endif // TIMESERVER_H
+#endif // ECHOCLIENT_H

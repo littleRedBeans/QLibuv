@@ -25,7 +25,7 @@ void EchoServer::startRecv()
     socket_->startRecv();
 }
 
-void EchoServer::onRecvData(const QString addr, quint16 port, const QByteArray data)
+void EchoServer::onRecvData(const QString addr, quint16 port, QByteArray data)
 {
     qDebug() << tr("EchoServer recv %1:%2->%3:%4 %5bytes")
                     .arg(addr)
@@ -33,6 +33,5 @@ void EchoServer::onRecvData(const QString addr, quint16 port, const QByteArray d
                     .arg(addr_)
                     .arg(port_)
                     .arg(data.size());
-    QByteArray msg = data;
-    socket_->sendData(msg, addr, port);
+    socket_->sendData(data, addr, port);
 }

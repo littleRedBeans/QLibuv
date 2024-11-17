@@ -26,7 +26,7 @@ void DiscardServer::startRecv()
     socket_->startRecv();
 }
 
-void DiscardServer::onRecvData(const QString addr, quint16 port, const QByteArray data)
+void DiscardServer::onRecvData(const QString addr, quint16 port, QByteArray data)
 {
     qDebug() << tr("DiscardServer recv %1:%2->%3:%4 %5bytes")
                     .arg(addr)

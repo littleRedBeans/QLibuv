@@ -25,7 +25,7 @@ void TimeServer::startRecv()
     socket_->startRecv();
 }
 
-void TimeServer::onRecvData(const QString addr, quint16 port, const QByteArray data)
+void TimeServer::onRecvData(const QString addr, quint16 port, QByteArray data)
 {
     qDebug() << tr("TimeServer recv %1:%2->%3:%4 %5bytes")
                     .arg(addr)

@@ -19,7 +19,7 @@ public:
     void startRecv();
 signals:
 private slots:
-    void onRecvData(const QString addr, quint16 port, const QByteArray data);
+    void onRecvData(const QString addr, quint16 port, QByteArray data);
 
 private:
     QString addr_;

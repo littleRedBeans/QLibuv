@@ -2,6 +2,7 @@
 #define UVUDPSOCKET_H
 #include <QObject>
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <uv.h>
 namespace shuimo {
@@ -21,7 +22,11 @@ public:
             , data_(data)
         {}
     };
-    explicit UvUdpSocket(const QString &addr, quint16 port, QObject *parent = nullptr);
+    typedef std::function<void(const QString addr, quint16 port, QByteArray data)> RecvCallback;
+    explicit UvUdpSocket(const QString &addr,
+                         quint16 port,
+                         RecvCallback recvCb = nullptr,
+                         QObject *parent = nullptr);
     ~UvUdpSocket();
     void sendData(QByteArray &data, const QString &address, quint16 port);
     void initsocket();
@@ -29,9 +34,9 @@ public:
     QString addr() const { return addr_; }
     quint16 port() const { return port_; }
 signals:
-    void sigRecv(const QString addr, quint16 port, const QByteArray data);
+    void sigRecv(const QString addr, quint16 port, QByteArray data);
     void sigError(const QString addr, quint16 port, const QString err);
-    void sigSendFail(const QString addr, quint16 port, const QByteArray data, const QString err);
+    void sigSendFail(const QString addr, quint16 port, QByteArray data, const QString err);
     void sigRecvFail(const QString addr, quint16 port, const QString err);
 
 private:
@@ -47,6 +52,7 @@ private:
     Q_DISABLE_COPY(UvUdpSocket) //noncopyable UvUdpSocket
     const QString addr_;
     const quint16 port_;
+    RecvCallback recvCb_;
     std::atomic_bool start_;
     uv_loop_t *loop_;
     std::unique_ptr<uv_udp_t> udp_socket_;

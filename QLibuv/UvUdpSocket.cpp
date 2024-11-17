@@ -7,10 +7,11 @@ using namespace shuimo::net;
 using namespace std;
 using namespace std::placeholders;
 
-UvUdpSocket::UvUdpSocket(const QString &ip, quint16 port, QObject *parent)
+UvUdpSocket::UvUdpSocket(const QString &ip, quint16 port, RecvCallback recvCb, QObject *parent)
     : QObject(parent)
     , addr_(ip)
     , port_(port)
+    , recvCb_(recvCb)
     , start_(false)
 {
     NetManager::instance()->moveToThread(this);
@@ -137,7 +138,12 @@ void UvUdpSocket::onUdpRead(uv_udp_t *,
         quint16 port = ntohs(ipv4_addr->sin_port);
         uv_ip4_name(ipv4_addr, addr_str, sizeof(addr_str));
         QByteArray receivedData(buf->base, nread);
-        emit sigRecv(addr_str, port, receivedData);
+        if (recvCb_) {
+            recvCb_(addr_str, port, receivedData);
+        } else {
+            emit sigRecv(addr_str, port, receivedData);
+        }
+
     } else if (nread < 0) {
         emit sigRecvFail(addr_, port_, uv_strerror(nread));
     }
