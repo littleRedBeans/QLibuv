@@ -1,11 +1,11 @@
 #include <QCoreApplication>
-#include "DaytimeServer.h"
+#include "TimeServer.h"
 int main(int argc, char *argv[])
 {
     if (argc > 1) {
         QCoreApplication a(argc, argv);
         QString addr(argv[1]);
-        DaytimeServer server(addr, 2013);
+        TimeServer server(addr, 2037);
         server.startRecv();
         return a.exec();
     } else {

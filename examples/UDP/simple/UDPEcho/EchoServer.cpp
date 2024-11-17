@@ -1,21 +1,20 @@
-#include "DiscardServer.h"
+#include "EchoServer.h"
+#include <QDateTime>
 #include <QDebug>
 #include "QLibuv/UvUdpSocket.h"
 using namespace shuimo::net;
 using namespace std;
-DiscardServer::DiscardServer(const QString &addr, quint16 port, QObject *parent)
+EchoServer::EchoServer(const QString &addr, quint16 port, QObject *parent)
     : QObject{parent}
     , addr_(addr)
     , port_(port)
     , socket_(make_unique<UvUdpSocket>(addr_, port_))
-{
-    
-}
+{}
 
-DiscardServer::~DiscardServer() {}
-void DiscardServer::startRecv()
+EchoServer::~EchoServer() {}
+void EchoServer::startRecv()
 {
-    connect(socket_.get(), &UvUdpSocket::sigRecv, this, &DiscardServer::onRecvData);
+    connect(socket_.get(), &UvUdpSocket::sigRecv, this, &EchoServer::onRecvData);
     connect(socket_.get(),
             &UvUdpSocket::sigError,
             this,
@@ -26,12 +25,14 @@ void DiscardServer::startRecv()
     socket_->startRecv();
 }
 
-void DiscardServer::onRecvData(const QString addr, quint16 port, const QByteArray data)
+void EchoServer::onRecvData(const QString addr, quint16 port, const QByteArray data)
 {
-    qDebug() << tr("DiscardServer recv %1:%2->%3:%4 %5bytes")
+    qDebug() << tr("EchoServer recv %1:%2->%3:%4 %5bytes")
                     .arg(addr)
                     .arg(port)
                     .arg(addr_)
                     .arg(port_)
                     .arg(data.size());
+    QByteArray msg = data;
+    socket_->sendData(msg, addr, port);
 }

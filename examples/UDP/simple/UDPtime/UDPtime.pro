@@ -11,7 +11,7 @@ INCLUDEPATH += $$_PRO_FILE_PWD_/../../../../include
 LIBS += -L$$_PRO_FILE_PWD_/../../../../lib
 LIBS += -luv -lQLibuv
 SOURCES += \
-        DaytimeServer.cpp \
+        TimeServer.cpp \
         main.cpp
 
 # Default rules for deployment.
@@ -20,4 +20,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-	DaytimeServer.h
+	TimeServer.h

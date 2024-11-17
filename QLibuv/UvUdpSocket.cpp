@@ -28,12 +28,12 @@ void UvUdpSocket::sendData(QByteArray &data, const QString &address, quint16 por
 {
     QMetaObject::invokeMethod(this,
                               "invokeSendData",
-                              Q_ARG(QByteArray &, data),
+                              Q_ARG(QByteArray, data),
                               Q_ARG(const QString &, address),
                               Q_ARG(quint16, port));
 }
 
-void UvUdpSocket::invokeSendData(QByteArray &data, const QString &address, quint16 port)
+void UvUdpSocket::invokeSendData(QByteArray data, const QString &address, quint16 port)
 {
     struct sockaddr_in addr;
     uv_ip4_addr(address.toStdString().c_str(), port, &addr);
@@ -69,7 +69,6 @@ void UvUdpSocket::onSendComplete(uv_udp_send_t *req, int status)
             uv_handle_get_data((uv_handle_t *) req->handle));
         socket->sigSendFail(context->addr_, context->port_, context->data_, uv_strerror(status));
     }
-
     delete context;
     delete req;
 }

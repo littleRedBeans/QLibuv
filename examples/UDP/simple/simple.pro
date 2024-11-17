@@ -2,4 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
 	UDPDaytime \
-	UDPDiscard
+	UDPDiscard \
+	UDPEcho \
+	UDPSimpleAllInOne \
+	UDPtime
