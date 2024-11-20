@@ -29,7 +29,7 @@ void EchoClient::startRecv()
 
 void EchoClient::sendData()
 {
-    QByteArray data(256, 'H');
+    QByteArray data(1200, 'H');
     socket_->sendData(data, addr_, 2007);
 }
 

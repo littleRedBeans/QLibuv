@@ -6,9 +6,11 @@ DESTDIR = $$_PRO_FILE_PWD_/../lib
 
 LIBS += -luv
 
-unix{
-    QMAKE_POST_LINK += /bin/bash $$_PRO_FILE_PWD_/moveHeader.sh $$_PRO_FILE_PWD_
-}
+INSTALLS_HEADERS_PATH = $$_PRO_FILE_PWD_/../include/QLibuv
+headers.files += $$_PRO_FILE_PWD_/UvUdpSocket.h
+headers.path = $$INSTALLS_HEADERS_PATH
+
+INSTALLS += headers
 
 HEADERS += \
 	EventDispatcherLibUv.h \

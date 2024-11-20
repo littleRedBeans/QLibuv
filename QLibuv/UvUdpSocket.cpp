@@ -77,7 +77,13 @@ void UvUdpSocket::initsocket()
 {
     QMetaObject::invokeMethod(this, "invokeInitSocket");
 }
-
+void UvUdpSocket::joinMultiCast(QString multicastAddr, QString interfaceAddr)
+{
+    QMetaObject::invokeMethod(this,
+                              "invokeJoinMultiCast",
+                              Q_ARG(QString, multicastAddr),
+                              Q_ARG(QString, interfaceAddr));
+}
 void UvUdpSocket::startRecv()
 {
     QMetaObject::invokeMethod(this, "invokeStartRecv");
@@ -91,10 +97,34 @@ void UvUdpSocket::invokeStartRecv()
     int r = uv_udp_recv_start(udp_socket_.get(), allocBuffer, onUdpReadStatic);
     if (r) {
         emit sigError(addr_, port_, uv_err_name(r));
+        return;
     }
     qDebug() << tr("start recv successed on %1:%2").arg(addr_).arg(port_);
 }
+void UvUdpSocket::invokeJoinMultiCast(QString multicastAddr, QString interfaceAddr)
+{
+    if (nullptr == udp_socket_) {
+        return;
+    }
+    std::string multiCast = multicastAddr.toStdString();
+    std::string interface = interfaceAddr.toStdString();
+    int r = uv_udp_set_membership(udp_socket_.get(),
+                                  multiCast.c_str(),
+                                  interface.c_str(),
+                                  UV_JOIN_GROUP);
+    if (r) {
+        emit sigError(multicastAddr, port_, uv_err_name(r));
+        return;
+    }
+    qDebug() << tr("muticast successed on %1:%2").arg(multicastAddr).arg(port_);
 
+    r = uv_udp_set_multicast_ttl(udp_socket_.get(), 32);
+    if (r) {
+        emit sigError(multicastAddr, port_, uv_err_name(r));
+        return;
+    }
+    qDebug() << tr("set muticast ttl:%1").arg(32);
+}
 void UvUdpSocket::invokeInitSocket()
 {
     assert(false == start_);
@@ -116,6 +146,7 @@ void UvUdpSocket::invokeInitSocket()
     int r = uv_udp_bind(udp_socket_.get(), (const struct sockaddr *) &addr, 0);
     if (r) {
         emit sigError(addr_, port_, uv_err_name(r));
+        return;
     }
     qDebug() << tr("bind successed on %1:%2").arg(addr_).arg(port_);
 }

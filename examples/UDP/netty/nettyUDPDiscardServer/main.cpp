@@ -1,6 +1,6 @@
 #include <QCoreApplication>
 #include <QDebug>
-#include "EchoServer.h"
+#include "DiscardServer.h"
 #include <unistd.h>
 int main(int argc, char *argv[])
 {
@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     if (argc > 1) {
         QCoreApplication a(argc, argv);
         QString addr(argv[1]);
-        EchoServer server(addr, 2007);
+        DiscardServer server(addr, 2007);
         server.startRecv();
         return a.exec();
     } else {

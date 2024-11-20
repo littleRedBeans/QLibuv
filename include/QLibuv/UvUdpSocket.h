@@ -31,6 +31,7 @@ public:
     void sendData(QByteArray &data, const QString &address, quint16 port);
     void initsocket();
     void startRecv();
+    void joinMultiCast(QString multicastAddr, QString interfaceAddr);
     QString addr() const { return addr_; }
     quint16 port() const { return port_; }
 signals:
@@ -43,6 +44,7 @@ private:
     Q_INVOKABLE void invokeStartRecv();
     Q_INVOKABLE void invokeInitSocket();
     Q_INVOKABLE void invokeSendData(QByteArray data, const QString &address, quint16 port);
+    Q_INVOKABLE void invokeJoinMultiCast(QString multicastAddr, QString interfaceAddr);
     void closeSocket();
     void onUdpRead(uv_udp_t *req, ssize_t nread, const uv_buf_t *buf, const struct sockaddr *addr);
     static void allocBuffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
