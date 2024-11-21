@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
         QString interfaceAddr(argv[1]);
         //bind on 0.0.0.0 for listening all addr
         MultiCastServer server("0.0.0.0", interfaceAddr, 2007);
+        //multicast addr 224.0.0.0～239.255.255.255
         QStringList multicastAddrs = {"224.0.0.1", "224.0.0.2", "224.0.0.3"};
         server.startRecv(multicastAddrs);
         return a.exec();

@@ -1,28 +1,17 @@
 #ifndef UVUDPSOCKET_H
 #define UVUDPSOCKET_H
 #include <QObject>
+#include "Callbacks.h"
 #include <atomic>
 #include <functional>
 #include <memory>
-#include <uv.h>
+
 namespace shuimo {
 namespace net {
 class Q_DECL_EXPORT UvUdpSocket : public QObject
 {
     Q_OBJECT
 public:
-    struct SendContext
-    {
-        QString addr_;
-        quint16 port_;
-        QByteArray data_;
-        explicit SendContext(QString addr, quint16 port, QByteArray data)
-            : addr_(addr)
-            , port_(port)
-            , data_(data)
-        {}
-    };
-    typedef std::function<void(const QString addr, quint16 port, QByteArray data)> RecvCallback;
     explicit UvUdpSocket(const QString &addr,
                          quint16 port,
                          RecvCallback recvCb = nullptr,
@@ -56,7 +45,6 @@ private:
     const quint16 port_;
     RecvCallback recvCb_;
     std::atomic_bool start_;
-    uv_loop_t *loop_;
     std::unique_ptr<uv_udp_t> udp_socket_;
 };
 } // namespace net
