@@ -5,6 +5,7 @@
 #include "Callbacks.h"
 #include <atomic>
 #include <functional>
+#include <map>
 #include <memory>
 namespace shuimo {
 namespace net {
@@ -37,6 +38,7 @@ private:
     static void onNewConnection(uv_stream_t *server, int status);
     static void onRead(uv_stream_t *client, ssize_t nread, const uv_buf_t *buf);
     Q_DISABLE_COPY(UvTcpServer) //noncopyable UvTcpServer
+    typedef std::map<uv_tcp_t *, std::pair<QString, quint16>> TcpConnections;
     const QString addr_;
     const quint16 port_;
     RecvCallback recvCb_;
